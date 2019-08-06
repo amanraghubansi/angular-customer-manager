@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { RestService } from './rest.services';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { TopBarComponent } from './top-bar/top-bar.component';
@@ -16,6 +17,7 @@ import { CommonModule } from '@angular/common';
     // CoreModule,           // Singleton objects (services, components that are loaded only once, etc.)
     // SharedModule  
   ],
+  providers:[RestService],
   declarations: [
     AppComponent,TopBarComponent
   ],
