@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { RestService } from '../rest.services';
+import { RestService } from '../network/rest.services';
+import { DISPLAY_MODE } from '../constants/constants';
+import { Customer } from '../interfaces/interfaces';
 // import { DataService } from '../core/services/data.service';
 // import { ICustomer, IPagedResults } from '../shared/interfaces';
 // import { FilterService } from '../core/services/filter.service';
@@ -13,26 +15,25 @@ export class CustomersComponent implements OnInit {
 
   title: string;
   filterText: string;
-  customers: any[] = [];
+  customers: Customer[] = [];
   filteredCustomers: any[] = [];
-  displayMode: DisplayModeEnum;
-  displayModeEnum = DisplayModeEnum;
   totalRecords = 0;
   pageSize = 10;
+  displayMode : string = null;
+  displayModeTypes =  DISPLAY_MODE;
 
   constructor(private restService: RestService) { }
 
   ngOnInit() {
     this.title = 'Customers';
     this.filterText = 'Filter Customers:';
-    this.displayMode = DisplayModeEnum.Card;
-
+    this.displayMode = DISPLAY_MODE.CARD;
     this.getCustomersPage(1);
   }
 
-  // changeDisplayMode(mode: DisplayModeEnum) {
-  //     this.displayMode = mode;
-  // }
+  changeDisplayMode(mode) {
+      this.displayMode = mode;
+  }
 
   // pageChanged(page: number) {
   //   this.getCustomersPage(page);
@@ -47,24 +48,21 @@ export class CustomersComponent implements OnInit {
     //     (err: any) => this.logger.log(err),
     //     () => this.logger.log('getCustomersPage() retrieved customers for page: ' + page));
     this.restService.getConfig()
-      .subscribe((data) => {
-        console.log('adadada',data);
+      .subscribe((response : []) => {
+        console.log('Data from config file',response);
+        this.customers = this.filteredCustomers =response;
+        this.totalRecords = response.length;
       });
   }
 
-  // filterChanged(data: string) {
-  //   if (data && this.customers) {
-  //       data = data.toUpperCase();
-  //       const props = ['firstName', 'lastName', 'city', 'state.name'];
-  //       this.filteredCustomers = this.filterService.filter<ICustomer>(this.customers, data, props);
-  //   } else {
-  //     this.filteredCustomers = this.customers;
-  //   }
-  // }
-}
-
-enum DisplayModeEnum {
-  Card = 0,
-  Grid = 1,
-  Map = 2
+  filterChanged(data: string) {
+    if (data && this.customers) {
+        data = data.toUpperCase();
+        const props = ['firstName', 'lastName', 'city', 'state.name'];
+        // this.filteredCustomers = this.filterService.filter<ICustomer>(this.customers, data, props);
+        this.filteredCustomers = this.customers;
+    } else {
+      this.filteredCustomers = this.customers;
+    }
+  }
 }

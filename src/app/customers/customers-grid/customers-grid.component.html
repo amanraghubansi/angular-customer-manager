@@ -1,4 +1,4 @@
-<!-- <div class="container">
+<div class="container">
     <div class="row grid-container">
         <div class="col-md-10">
             <div class="table">
@@ -16,7 +16,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let customer of customers;trackBy:trackbyService.customer">
+                        <tr *ngFor="let customer of customers;">
                             <td><img src="assets/images/{{ customer.gender | lowercase }}.png"
                                     class="grid-image" alt="Customer Image" /></td>
                             <td><a [routerLink]="['/customers',customer.id,'details']">{{ customer.firstName | capitalize }}</a></td>
@@ -36,4 +36,4 @@
             </div>
         </div>
     </div>
-</div> -->
+</div>

@@ -1,1 +1,68 @@
-asdalnmfklsmvksdnfklsndfklnl
+<div class="customers view indent">
+    <div class="container">
+        <header>
+            <h3>
+                <span class="glyphicon glyphicon-user"></span>
+                {{ title }}
+            </h3>
+        </header>
+        <br />
+        <div class="row">
+            <div class="col-md-10">
+                <div class="navbar">
+                    <ul class="nav navbar-nav">
+                        <li class="toolbar-item">
+                            <a (click)="changeDisplayMode(displayModeTypes.CARD)" [class.active]="displayMode === displayModeTypes.CARD">
+                                <span class="glyphicon glyphicon-th-large"></span> Card View
+                            </a>
+                        </li>
+                        <li class="toolbar-item">
+                            <a (click)="changeDisplayMode(displayModeTypes.GRID)" [class.active]="displayMode === displayModeTypes.GRID">
+                                <span class="glyphicon glyphicon-align-justify"></span> List View
+                            </a>
+                        </li>
+                        <li class="toolbar-item">
+                            <a [class.active]="displayMode === displayModeTypes.MAP">
+                                <span class="glyphicon glyphicon-map-marker"></span> Map View
+                            </a>
+                        </li>
+                        <li class="toolbar-item">
+                            <a routerLink="/customers/0/edit">
+                                <span class="glyphicon glyphicon-plus"></span> New Customer
+                            </a>
+                        </li>
+                    </ul>
+                    <!-- <cm-filter-textbox class="navbar-right"
+                     (changed)="filterChanged($event)"></cm-filter-textbox> -->
+                </div>
+            </div>
+        </div>
+        
+        
+        <customers-card-list
+          [customers]="filteredCustomers" 
+          [hidden]="displayMode !== displayModeTypes.CARD"></customers-card-list>
+
+        <customers-grid-list
+          [customers]="filteredCustomers" 
+          [hidden]="displayMode !== displayModeTypes.GRID"></customers-grid-list>
+        
+        <!-- 
+        <cm-map *ngIf="filteredCustomers.length" 
+            [zoom]="2" 
+            [enabled]="displayMode === displayModeEnum.Map" 
+            [hidden]="displayMode !== displayModeEnum.Map">
+          <cm-map-point 
+            *ngFor="let customer of filteredCustomers" 
+            [latitude]="customer.latitude" 
+            [longitude]="customer.longitude"
+            [markerText]="'<h3>' + customer.firstName + ' ' + customer.lastName + '</a></h3>' + customer.city + ', ' + customer.state.name"></cm-map-point>
+        </cm-map>
+
+        <cm-pagination
+            [totalItems]="totalRecords" 
+            [pageSize]="pageSize" 
+            (pageChanged)="pageChanged($event)"></cm-pagination> -->
+          
+    </div>
+</div>

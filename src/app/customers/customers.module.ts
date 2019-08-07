@@ -1,13 +1,14 @@
 import { NgModule } from '@angular/core';
-
-// import { SharedModule } from '../shared/shared.module';
+import { CommonModule } from '@angular/common';
 import { CustomersRoutingModule } from './customers-routing.module';
-// import { RestService } from '../rest.services';
+import { CustomersComponent } from './customers.component';
+import { CustomersCardComponent } from './customers-card/customers-card.component';
+import { CustomersGridComponent } from './customers-grid/customers-grid.component';
+import { AppCommonModule } from '../app-common/app-common.module';
 
 
 @NgModule({
-  imports: [CustomersRoutingModule],
-  declarations: [CustomersRoutingModule.components],
-  // providers :[RestService]
+  imports: [CustomersRoutingModule,CommonModule,AppCommonModule],
+  declarations: [ CustomersComponent, CustomersCardComponent, CustomersGridComponent ]
 })
 export class CustomersModule { }
