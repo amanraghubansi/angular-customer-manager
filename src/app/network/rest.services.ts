@@ -29,6 +29,40 @@ export class RestService {
             );
     }
 
+    insertCustomer(customer: Customer): Observable<Customer> {
+        return this.http.post<Customer>(this.configUrl, customer)
+            .pipe(catchError(this.handleError));
+    }
+
+    updateCustomer(customer: Customer): Observable<boolean> {
+        return this.http.put(this.configUrl + '/' + customer.id, customer)
+            .pipe(
+                map(res => res.status),
+                catchError(this.handleError)
+            );
+    }
+
+    deleteCustomer(id: number) {
+        //How to update to update in json file
+        return this.http.get(this.configUrl)
+        .pipe(
+            map((response : Customer[]) => {
+                let isDeleted : boolean = false;
+                if(response){
+                    for(let i=0;i<response.length;i++){
+                        if(response[i].id === id){
+                            response.splice(i,1);
+                            isDeleted= true;
+                            break;
+                        }
+                    }                
+                }
+                return isDeleted;
+            }),
+            catchError(this.handleError)
+        );
+    }
+
     private handleError(error: HttpErrorResponse) {
         console.error('server error:', error);
         if (error.error instanceof Error) {

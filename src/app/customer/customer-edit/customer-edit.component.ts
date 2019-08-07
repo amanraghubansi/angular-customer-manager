@@ -62,55 +62,46 @@ export class CustomerEditComponent implements OnInit {
   }
 
   submit() {
-    // if (this.customer.id === 0) {
-    //   this.dataService.insertCustomer(this.customer)
-    //     .subscribe((insertedCustomer: ICustomer) => {
-    //       if (insertedCustomer) {
-    //         // Mark form as pristine so that CanDeactivateGuard won't prompt before navigation
-    //         this.customerForm.form.markAsPristine();
-    //         this.router.navigate(['/customers']);
-    //       } else {
-    //         const msg = 'Unable to insert customer';
-    //         this.growler.growl(msg, GrowlerMessageType.Danger);
-    //         this.errorMessage = msg;
-    //       }
-    //     },
-    //       (err: any) => this.logger.log(err));
-    // } else {
-    //   this.dataService.updateCustomer(this.customer)
-    //     .subscribe((status: boolean) => {
-    //       if (status) {
-    //         // Mark form as pristine so that CanDeactivateGuard won't prompt before navigation
-    //         this.customerForm.form.markAsPristine();
-    //         this.growler.growl('Operation performed successfully.', GrowlerMessageType.Success);
-    //         // this.router.navigate(['/customers']);
-    //       } else {
-    //         const msg = 'Unable to update customer';
-    //         this.growler.growl(msg, GrowlerMessageType.Danger);
-    //         this.errorMessage = msg;
-    //       }
-    //     },
-    //       (err: any) => this.logger.log(err));
-    // }
+    if (this.customer.id === 0) {
+      this.restService.insertCustomer(this.customer)
+        .subscribe((insertedCustomer: Customer) => {
+          if (insertedCustomer) {
+            this.router.navigate(['/customers']);
+          } else {
+            this.errorMessage = 'Unable to insert customer,Please try again.';
+          }
+        },
+        (err: any) => console.log('Error Occured'));
+    } else {
+      this.restService.updateCustomer(this.customer)
+        .subscribe((status: boolean) => {
+          if (status) {
+            //Show some toaster over here.
+            this.router.navigate(['/customers']);
+          } else {
+            this.errorMessage = 'Unable to update customer,Please try again.';
+          }
+        },
+        (err: any) => console.log('Error Occured'));
+    }
   }
 
   cancel(event: Event) {
     event.preventDefault();
-    // Route guard will take care of showing modal dialog service if data is dirty
     this.router.navigate(['/customers']);
   }
 
   delete(event: Event) {
-    // event.preventDefault();
-    // this.dataService.deleteCustomer(this.customer.id)
-    //   .subscribe((status: boolean) => {
-    //     if (status) {
-    //       this.router.navigate(['/customers']);
-    //     } else {
-    //       this.errorMessage = 'Unable to delete customer';
-    //     }
-    //   },
-    //     (err) => this.logger.log(err));
+    event.preventDefault();
+    this.restService.deleteCustomer(this.customer.id)
+      .subscribe((status: boolean) => {
+        if (status) {
+          this.router.navigate(['/customers']);
+        } else {
+          this.errorMessage = 'Unable to delete customer';
+        }
+      },
+        (err) => this.logger.log(err));
   }
 
 }
