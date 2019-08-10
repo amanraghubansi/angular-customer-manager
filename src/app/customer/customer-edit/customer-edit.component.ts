@@ -52,7 +52,9 @@ export class CustomerEditComponent implements OnInit {
       }
     });
 
-    // this.dataService.getStates().subscribe((states: IState[]) => this.states = states);
+    this.restService.getStates().subscribe((states: State[]) => {
+      this.states = states;
+    });
   }
 
   getCustomer(id: number) {
@@ -64,8 +66,9 @@ export class CustomerEditComponent implements OnInit {
   submit() {
     if (this.customer.id === 0) {
       this.restService.insertCustomer(this.customer)
-        .subscribe((insertedCustomer: Customer) => {
-          if (insertedCustomer) {
+        .subscribe((status) => {
+          if (status) {
+            alert("Cusotmer added successfully");
             this.router.navigate(['/customers']);
           } else {
             this.errorMessage = 'Unable to insert customer,Please try again.';
@@ -74,9 +77,9 @@ export class CustomerEditComponent implements OnInit {
         (err: any) => console.log('Error Occured'));
     } else {
       this.restService.updateCustomer(this.customer)
-        .subscribe((status: boolean) => {
+        .subscribe((status) => {
           if (status) {
-            //Show some toaster over here.
+            alert("Cusotmer info updated successfully");
             this.router.navigate(['/customers']);
           } else {
             this.errorMessage = 'Unable to update customer,Please try again.';
@@ -101,7 +104,7 @@ export class CustomerEditComponent implements OnInit {
           this.errorMessage = 'Unable to delete customer';
         }
       },
-        (err) => this.logger.log(err));
+      (err: any) => console.log('Error Occured'));
   }
 
 }

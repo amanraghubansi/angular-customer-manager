@@ -1,19 +1,14 @@
-/// <reference path="../../../../node_modules/@types/googlemaps/index.d.ts" />
 
 import {
-  Component, OnInit, AfterContentInit, Input, ViewChild,
-  ContentChildren, ElementRef, QueryList, ChangeDetectionStrategy
+  Component, OnInit, Input, ViewChild, ElementRef, ChangeDetectionStrategy
 } from '@angular/core';
-
-import { debounceTime } from 'rxjs/operators';
-import { MapPointComponent } from './mapPoint.component';
 
 @Component({
   selector: 'cm-map',
   templateUrl: './map.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MapComponent implements OnInit, AfterContentInit {
+export class MapComponent implements OnInit {
 
   private isEnabled: boolean;
   private loadingScript: boolean;
@@ -41,7 +36,6 @@ export class MapComponent implements OnInit, AfterContentInit {
   }
 
   @ViewChild('mapContainer', { static: true }) mapDiv: ElementRef;
-  @ContentChildren(MapPointComponent) mapPoints: QueryList<MapPointComponent>;
 
   constructor() { }
 
@@ -56,16 +50,6 @@ export class MapComponent implements OnInit, AfterContentInit {
         this.mapWidth = hw.width + 'px';
       }
     }
-  }
-
-  ngAfterContentInit() {
-    this.mapPoints.changes
-      .pipe(
-        debounceTime(500)
-      )
-      .subscribe(() => {
-        if (this.enabled) { this.renderMapPoints(); }
-      });
   }
 
   init() {
@@ -121,33 +105,11 @@ export class MapComponent implements OnInit, AfterContentInit {
     };
 
     this.map = new google.maps.Map(this.mapDiv.nativeElement, options);
-    if (this.mapPoints && this.mapPoints.length) {
-      this.renderMapPoints();
-    } else {
-      this.createMarker(latlng, this.map, this.markerText);
-    }
+    this.createMarker(latlng, this.map, this.markerText);
   }
 
   private createLatLong(latitude: number, longitude: number) {
     return (latitude && longitude) ? new google.maps.LatLng(latitude, longitude) : null;
-  }
-
-  private renderMapPoints() {
-    if (this.map) {
-      this.clearMapPoints();
-
-      this.mapPoints.forEach((point: MapPointComponent) => {
-        const mapPointLatlng = this.createLatLong(point.latitude, point.longitude);
-        this.createMarker(mapPointLatlng, this.map, point.markerText);
-      });
-    }
-  }
-
-  private clearMapPoints() {
-    this.markers.forEach((marker: google.maps.Marker) => {
-      marker.setMap(null);
-    });
-    this.markers = [];
   }
 
   private createMarker(position: google.maps.LatLng, map: google.maps.Map, title: string) {

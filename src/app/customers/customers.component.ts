@@ -21,6 +21,7 @@ export class CustomersComponent implements OnInit {
   pageSize = 10;
   displayMode : string = null;
   displayModeTypes =  DISPLAY_MODE;
+  paginationCurrentPage:number;
 
   constructor(private restService: RestService) { }
 
@@ -28,32 +29,39 @@ export class CustomersComponent implements OnInit {
     this.title = 'Customers';
     this.filterText = 'Filter Customers:';
     this.displayMode = DISPLAY_MODE.CARD;
-    this.getCustomersPage(1);
+    this.paginationCurrentPage = this.restService.paginationCurrentPage;
+    this.getCustomersPage(this.paginationCurrentPage);
   }
 
   changeDisplayMode(mode) {
       this.displayMode = mode;
   }
 
-  // pageChanged(page: number) {
-  //   this.getCustomersPage(page);
-  // }
+  pageChanged(page: number) {
+    this.paginationCurrentPage = this.restService.paginationCurrentPage = page;
+    this.getCustomersPage(page);
+  }
 
   getCustomersPage(page: number) {
-    // this.dataService.getCustomersPage((page - 1) * this.pageSize, this.pageSize)
-    //     .subscribe((response: IPagedResults<ICustomer[]>) => {
-    //       this.customers = this.filteredCustomers = response.results;
-    //       this.totalRecords = response.totalRecords;
-    //     },
-    //     (err: any) => this.logger.log(err),
-    //     () => this.logger.log('getCustomersPage() retrieved customers for page: ' + page));
-    this.restService.getConfig()
-      .subscribe((response : []) => {
-        console.log('Data from config file',response);
-        this.customers = this.filteredCustomers =response;
-        this.totalRecords = response.length;
+    this.restService.getConfig(page-1,this.pageSize)
+      .subscribe((response : any) => {
+        this.calculateOrderTotal(response.list);
+        this.customers = this.filteredCustomers =response.list;
+        this.totalRecords = response.totalRecords;
       });
   }
+
+  calculateOrderTotal(customers: Customer[]) {
+    for (const customer of customers) {
+        let total = 0;
+        if (customer && customer.orders) {    
+            for (const order of customer.orders) {
+                total += order.itemCost;
+            }
+        }
+        customer.orderTotal = total;
+    }
+}
 
   filterChanged(data: string) {
     if (data && this.customers) {

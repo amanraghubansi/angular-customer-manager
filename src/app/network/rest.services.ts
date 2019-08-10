@@ -1,7 +1,7 @@
 import { HttpClient,HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Customer } from '../interfaces/interfaces';
-import { Observable } from 'rxjs';
+import { Observable ,of} from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 
 
@@ -11,56 +11,98 @@ export class RestService {
     constructor(private http: HttpClient) { }
 
     configUrl = 'assets/data/customers.json';
+    stateUrl = 'assets/data/states.json';
 
-    getConfig() {
-        return this.http.get(this.configUrl);
+    paginationCurrentPage = 1;
+    
+    private customersList  = null;
+    private stateList  = null;
+
+    getConfig(page,pageSize) {
+        if(this.customersList){
+            return of({
+                list : this.customersList.slice(page*pageSize,page*pageSize+pageSize),
+                totalRecords : this.customersList.length
+            });
+        }
+        return this.http.get(this.configUrl)
+                .pipe(
+                    map((resp)=>{
+                        if(resp){
+                            this.customersList = resp;
+                        }
+                        return {
+                            list : this.customersList.slice(page*pageSize,page*pageSize+pageSize),
+                            totalRecords : this.customersList.length
+                        }
+                    }),
+                    catchError(this.handleError)
+                )
+    }
+
+    getStates() {
+        if(this.stateList){
+            return of(this.stateList);
+        }
+        return this.http.get(this.stateUrl)
+                .pipe(
+                    map((resp)=>{
+                        if(resp){
+                            this.stateList = resp;
+                        }
+                        return resp;
+                    }),
+                    catchError(this.handleError)
+                )
     }
 
     getCustomer(id: number): Observable<Customer> {
-        return this.http.get(this.configUrl)
-            .pipe(
-                map(response => {
-                    let customer = response.find(function(el){
-                        if(el && el.id === id){ return el;}
-                    });
-                    return customer;
-                }),
-                catchError(this.handleError)
-            );
-    }
+        if(this.customersList){
+            return of(this.findCustomer(this.customersList,id));
+        }
 
-    insertCustomer(customer: Customer): Observable<Customer> {
-        return this.http.post<Customer>(this.configUrl, customer)
-            .pipe(catchError(this.handleError));
-    }
-
-    updateCustomer(customer: Customer): Observable<boolean> {
-        return this.http.put(this.configUrl + '/' + customer.id, customer)
-            .pipe(
-                map(res => res.status),
-                catchError(this.handleError)
-            );
-    }
-
-    deleteCustomer(id: number) {
-        //How to update to update in json file
         return this.http.get(this.configUrl)
         .pipe(
             map((response : Customer[]) => {
-                let isDeleted : boolean = false;
-                if(response){
-                    for(let i=0;i<response.length;i++){
-                        if(response[i].id === id){
-                            response.splice(i,1);
-                            isDeleted= true;
-                            break;
-                        }
-                    }                
-                }
-                return isDeleted;
+                return this.findCustomer(response,id);
             }),
             catchError(this.handleError)
-        );
+            );
+        }
+
+    private findCustomer(data,id){
+        let customer = data.find((el)=>{
+            if(el && el.id === id){ return el;}
+        });
+        return customer;
+    }
+
+    insertCustomer(customer: Customer): Observable<boolean> {
+        customer.id = this.customersList.length+1;
+        if(this.customersList){
+            this.customersList.push(customer);
+            return of(true);
+        }
+    }
+
+    updateCustomer(customer: Customer): Observable<boolean> {
+        if(this.customersList){
+            let cust = this.findCustomer(this.customersList,customer.id);
+            cust =  customer;
+            return of(true);
+        }
+    }
+
+    deleteCustomer(id: number) {
+        if(this.customersList){
+            for(let i=0;i<this.customersList.length;i++){
+                if(this.customersList[i].id === id){
+                    this.customersList.splice(i,1);
+                    break;
+                }
+            }
+            return of(true);
+        }
     }
 
     private handleError(error: HttpErrorResponse) {

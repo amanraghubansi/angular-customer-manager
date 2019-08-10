@@ -9,6 +9,7 @@ export interface Customer {
     orderTotal?: number;
     latitude?: number;
     longitude?: number;
+    orders?: any[];
 }
 
 export interface State {
