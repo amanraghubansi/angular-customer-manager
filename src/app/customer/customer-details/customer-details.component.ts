@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Customer } from 'src/app/interfaces/interfaces';
-import { RestService } from 'src/app/network/rest.services';
+import { RestService } from 'src/app/rest.services';
 // import { ICustomer } from '../../shared/interfaces';
 // import { DataService } from '../../core/services/data.service';
 

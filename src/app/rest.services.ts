@@ -1,6 +1,6 @@
 import { HttpClient,HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Customer } from '../interfaces/interfaces';
+import { Customer } from './interfaces/interfaces';
 import { Observable ,of} from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 

@@ -7,8 +7,6 @@ const app_routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: '/customers' },
   { path: 'customers/:id', data: { preload: true }, loadChildren: './customer/customer.module#CustomerModule' },
   { path: 'customers', loadChildren: './customers/customers.module#CustomersModule' },
-  // { path: 'orders', data: { preload: true }, loadChildren: 'app/orders/orders.module#OrdersModule' },
-  // { path: 'about', loadChildren: 'app/about/about.module#AboutModule' },
   { path: '**', pathMatch: 'full', redirectTo: '/customers' }, 
 
 ];

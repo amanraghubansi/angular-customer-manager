@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RestService } from '../network/rest.services';
+import { RestService } from '../rest.services';
 import { DISPLAY_MODE } from '../constants/constants';
 import { Customer } from '../interfaces/interfaces';
 // import { DataService } from '../core/services/data.service';

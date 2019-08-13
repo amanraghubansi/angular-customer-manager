@@ -5,20 +5,16 @@ import { TopBarComponent } from './top-bar/top-bar.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import { NetworkModule } from './network/network.module';
+import { RestService } from './rest.services';
 
 @NgModule({
   imports: [
     BrowserModule,
     CommonModule,
-    // HttpClientModule,
-    // LoginModule,          // Eager loaded since we may need to go here right away as browser loads based on route user enters
-    AppRoutingModule,     // Main routes for application
-    // CoreModule,           // Singleton objects (services, components that are loaded only once, etc.)
-    // SharedModule,
-    NetworkModule  
+    HttpClientModule,
+    AppRoutingModule  
   ],
-  // providers:[RestService],
+  providers:[RestService],
   declarations: [
     AppComponent,TopBarComponent
   ],

@@ -1,3 +1,4 @@
+/// <reference path="../../../../node_modules/@types/googlemaps/index.d.ts" />
 
 import {
   Component, OnInit, Input, ViewChild, ElementRef, ChangeDetectionStrategy
