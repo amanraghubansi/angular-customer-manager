@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { Customer } from 'src/app/interfaces/interfaces';
+import { Customer } from '../../interfaces/interfaces';
 
 @Component({
   selector: 'customers-grid-list',

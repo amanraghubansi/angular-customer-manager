@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute, Params } from '@angular/router';
 import { NgForm } from '@angular/forms';
-import { Customer, State } from 'src/app/interfaces/interfaces';
-import { RestService } from 'src/app/rest.services';
+import { Customer, State } from '../../interfaces/interfaces';
+import { RestService } from '../../rest.services';
 
 // import { DataService } from '../../core/services/data.service';
 // import { ModalService, IModalContent } from '../../core/modal/modal.service';
